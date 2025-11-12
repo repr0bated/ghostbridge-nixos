@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  networking.openvswitch.enable = true;
 
   services.openvswitch = {
     enable = true;
