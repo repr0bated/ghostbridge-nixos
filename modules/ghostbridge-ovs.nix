@@ -2,10 +2,15 @@
 
 {
 
-  services.openvswitch = {
+  virtualisation.vswitch = {
     enable = true;
-    package = pkgs.openvswitch;
+    resetOnStart = false;
   };
+
+  environment.systemPackages = with pkgs; [
+    openvswitch
+  ];
+
 
   systemd.network = {
     enable = true;
@@ -54,11 +59,11 @@
 
   systemd.services."ovs-bridge-setup" = {
     description = "Setup OVS Bridges for GhostBridge";
-    after = [ "openvswitch.service" "network-pre.target" ];
+    after = [ "vswitchd.service" "network-pre.target" ];
     before = [ "network.target" "systemd-networkd.service" ];
     wants = [ "network-pre.target" ];
     wantedBy = [ "multi-user.target" ];
-    requires = [ "openvswitch.service" ];
+    requires = [ "vswitchd.service" ];
     
     path = with pkgs; [ openvswitch iproute2 ];
     
@@ -109,7 +114,7 @@
     after = [ "ovs-bridge-setup.service" "systemd-networkd.service" ];
     wants = [ "ovs-bridge-setup.service" ];
     wantedBy = [ "multi-user.target" ];
-    requires = [ "openvswitch.service" ];
+    requires = [ "vswitchd.service" ];
     
     path = with pkgs; [ openvswitch ];
     
@@ -131,7 +136,7 @@
     text = ''
       #!/usr/bin/env bash
       echo "=== OVS Service Status ==="
-      systemctl status openvswitch.service --no-pager
+      systemctl status vswitchd.service --no-pager
       echo ""
       echo "=== OVS Bridge Status ==="
       ovs-vsctl show
