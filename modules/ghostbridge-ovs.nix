@@ -84,9 +84,9 @@
     wants = [ "network-pre.target" ];
     wantedBy = [ "multi-user.target" ];
     requires = [ "vswitchd.service" ];
-    
+
     path = with pkgs; [ openvswitch iproute2 ];
-    
+
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -103,13 +103,13 @@
 
       echo "Creating OVS bridge: ovsbr0"
       ovs-vsctl --may-exist add-br ovsbr0
-      
+
       echo "Adding physical interface ens1 to ovsbr0"
       ovs-vsctl --may-exist add-port ovsbr0 ens1
-      
+
       echo "Creating internal interface for ovsbr0"
       ovs-vsctl --may-exist add-port ovsbr0 ovsbr0-if -- set interface ovsbr0-if type=internal
-      
+
       echo "Bringing up ovsbr0 interfaces"
       ip link set ovsbr0 up
       ip link set ovsbr0-if up
@@ -117,10 +117,10 @@
 
       echo "Creating OVS bridge: ovsbr1"
       ovs-vsctl --may-exist add-br ovsbr1
-      
+
       echo "Creating internal interface for ovsbr1"
       ovs-vsctl --may-exist add-port ovsbr1 ovsbr1-if -- set interface ovsbr1-if type=internal
-      
+
       echo "Bringing up ovsbr1 interfaces"
       ip link set ovsbr1 up
       ip link set ovsbr1-if up
@@ -129,6 +129,21 @@
     '';
   };
 
+  systemd.services."ovs-flow-rules" = {
+    description = "Apply OpenFlow rules to OVS bridges";
+    after = [ "ovs-bridge-setup.service" "systemd-networkd.service" ];
+    wants = [ "ovs-bridge-setup.service" ];
+    wantedBy = [ "multi-user.target" ];
+    requires = [ "vswitchd.service" ];
+
+    path = with pkgs; [ openvswitch ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.bash}/bin/bash ${./scripts/ovs-flow-rules.sh}";
+    };
+  };
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
@@ -148,6 +163,12 @@
       echo ""
       echo "=== Network Interfaces ==="
       ip -br addr
+      echo ""
+      echo "=== OpenFlow Rules (ovsbr0) ==="
+      ovs-ofctl dump-flows ovsbr0
+      echo ""
+      echo "=== OpenFlow Rules (ovsbr1) ==="
+      ovs-ofctl dump-flows ovsbr1
     '';
     mode = "0755";
   };
