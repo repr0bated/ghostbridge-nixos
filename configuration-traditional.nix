@@ -12,11 +12,21 @@
   nixpkgs.config.allowUnfree = true;
 
   boot.loader = {
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot";
+    };
     systemd-boot = {
       enable = true;
       configurationLimit = 10;
       editor = false;
+      consoleMode = "auto";
+      memtest86.enable = true;
+      netbootxyz.enable = true;
     };
+    timeout = 5;
+  };
+
     efi.canTouchEfiVariables = true;
   };
 

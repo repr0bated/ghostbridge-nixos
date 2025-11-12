@@ -10,12 +10,19 @@
   ];
 
   boot.loader = {
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot";
+    };
     systemd-boot = {
       enable = true;
       configurationLimit = 10;
       editor = false;
+      consoleMode = "auto";
+      memtest86.enable = true;
+      netbootxyz.enable = true;
     };
-    efi.canTouchEfiVariables = true;
+    timeout = 5;
   };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
