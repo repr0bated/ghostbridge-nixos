@@ -9,6 +9,17 @@
     ./modules/virtualization.nix
   ];
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      unstable = import (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+      }) {
+        system = final.system;
+        config.allowUnfree = true;
+      };
+    })
+  ];
+
   nixpkgs.config.allowUnfree = true;
 
   boot.loader = {
