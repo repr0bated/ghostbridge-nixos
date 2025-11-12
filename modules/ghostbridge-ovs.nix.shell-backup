@@ -11,6 +11,8 @@
     openvswitch
   ];
 
+
+
   systemd.services."disable-nic-offload" = {
     description = "Disable NIC hardware offload (CRITICAL for Hetzner)";
     after = [ "network-pre.target" ];
@@ -76,18 +78,55 @@
   };
 
   systemd.services."ovs-bridge-setup" = {
-    description = "Setup OVS Bridges for GhostBridge (OVSDB JSON-RPC)";
+    description = "Setup OVS Bridges for GhostBridge";
     after = [ "vswitchd.service" "network-pre.target" ];
     before = [ "network.target" "systemd-networkd.service" ];
     wants = [ "network-pre.target" ];
     wantedBy = [ "multi-user.target" ];
     requires = [ "vswitchd.service" ];
     
+    path = with pkgs; [ openvswitch iproute2 ];
+    
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "/usr/local/bin/op-dbus init-network --wan-interface ens1";
     };
+
+    script = ''
+      set -euo pipefail
+
+      echo "Waiting for openvswitch to be ready..."
+      until ovs-vsctl --timeout=10 show &>/dev/null; do
+        echo "Waiting for OVS..."
+        sleep 1
+      done
+
+      echo "Creating OVS bridge: ovsbr0"
+      ovs-vsctl --may-exist add-br ovsbr0
+      
+      echo "Adding physical interface ens1 to ovsbr0"
+      ovs-vsctl --may-exist add-port ovsbr0 ens1
+      
+      echo "Creating internal interface for ovsbr0"
+      ovs-vsctl --may-exist add-port ovsbr0 ovsbr0-if -- set interface ovsbr0-if type=internal
+      
+      echo "Bringing up ovsbr0 interfaces"
+      ip link set ovsbr0 up
+      ip link set ovsbr0-if up
+      ip link set ens1 up
+
+      echo "Creating OVS bridge: ovsbr1"
+      ovs-vsctl --may-exist add-br ovsbr1
+      
+      echo "Creating internal interface for ovsbr1"
+      ovs-vsctl --may-exist add-port ovsbr1 ovsbr1-if -- set interface ovsbr1-if type=internal
+      
+      echo "Bringing up ovsbr1 interfaces"
+      ip link set ovsbr1 up
+      ip link set ovsbr1-if up
+
+      echo "OVS bridge setup complete"
+    '';
   };
 
   systemd.services."ovs-flow-rules" = {
