@@ -3,6 +3,11 @@
 {
   networking.openvswitch.enable = true;
 
+  services.openvswitch = {
+    enable = true;
+    package = pkgs.openvswitch;
+  };
+
   systemd.network = {
     enable = true;
     wait-online.anyInterface = true;
@@ -54,6 +59,7 @@
     before = [ "network.target" "systemd-networkd.service" ];
     wants = [ "network-pre.target" ];
     wantedBy = [ "multi-user.target" ];
+    requires = [ "openvswitch.service" ];
     
     path = with pkgs; [ openvswitch iproute2 ];
     
@@ -64,6 +70,12 @@
 
     script = ''
       set -euo pipefail
+
+      echo "Waiting for openvswitch to be ready..."
+      until ovs-vsctl --timeout=10 show &>/dev/null; do
+        echo "Waiting for OVS..."
+        sleep 1
+      done
 
       echo "Creating OVS bridge: ovsbr0"
       ovs-vsctl --may-exist add-br ovsbr0
@@ -98,6 +110,7 @@
     after = [ "ovs-bridge-setup.service" "systemd-networkd.service" ];
     wants = [ "ovs-bridge-setup.service" ];
     wantedBy = [ "multi-user.target" ];
+    requires = [ "openvswitch.service" ];
     
     path = with pkgs; [ openvswitch ];
     
@@ -118,6 +131,9 @@
   environment.etc."ghostbridge/ovs-status.sh" = {
     text = ''
       #!/usr/bin/env bash
+      echo "=== OVS Service Status ==="
+      systemctl status openvswitch.service --no-pager
+      echo ""
       echo "=== OVS Bridge Status ==="
       ovs-vsctl show
       echo ""
