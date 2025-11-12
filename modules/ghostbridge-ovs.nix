@@ -96,9 +96,9 @@
     wants = [ "ovs-bridge-setup.service" ];
     wantedBy = [ "multi-user.target" ];
     requires = [ "vswitchd.service" ];
-    
+
     path = with pkgs; [ openvswitch ];
-    
+
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;

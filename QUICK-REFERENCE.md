@@ -59,10 +59,6 @@ sudo ovs-vsctl show
 sudo ovs-vsctl list-ports ovsbr0
 sudo ovs-vsctl list-ports ovsbr1
 
-# Show OpenFlow rules
-sudo ovs-ofctl dump-flows ovsbr0
-sudo ovs-ofctl dump-flows ovsbr1
-
 # Show network interfaces
 ip addr show
 ip link show
@@ -76,9 +72,6 @@ sudo systemctl restart openvswitch.service
 
 # Recreate bridges
 sudo systemctl restart ovs-bridge-setup.service
-
-# Reapply OpenFlow rules
-sudo systemctl restart ovs-flow-rules.service
 
 # Restart networkd
 sudo systemctl restart systemd-networkd.service
@@ -433,7 +426,6 @@ systemctl --failed
 sudo systemctl restart openvswitch.service
 sudo systemctl restart ovs-bridge-setup.service
 sudo systemctl restart systemd-networkd.service
-sudo systemctl restart ovs-flow-rules.service
 
 # Check for errors
 sudo journalctl -u systemd-networkd.service -n 50

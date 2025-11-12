@@ -95,11 +95,27 @@
             name = "ovsbr0";
             type = "openvswitch";
             dhcp = true;
+            openflow = {
+              auto_apply_defaults = true;
+              default_rules = [
+                "priority=100,dl_dst=ff:ff:ff:ff:ff:ff,actions=drop"
+                "priority=100,dl_dst=01:00:00:00:00:00/01:00:00:00:00:00,actions=drop"
+                "priority=50,actions=normal"
+              ];
+            };
           }
           {
             name = "ovsbr1";
             type = "openvswitch";
             address = "10.0.1.1/24";
+            openflow = {
+              auto_apply_defaults = true;
+              default_rules = [
+                "priority=100,dl_dst=ff:ff:ff:ff:ff:ff,actions=drop"
+                "priority=100,dl_dst=01:00:00:00:00:00/01:00:00:00:00:00,actions=drop"
+                "priority=50,actions=normal"
+              ];
+            };
           }
         ];
       };

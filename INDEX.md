@@ -55,7 +55,6 @@ nix/ghostbridge/
 │   ├── dbus-orchestrator.nix         # D-Bus services
 │   ├── virtualization.nix            # KVM/LXC/Docker
 │   └── scripts/
-│       ├── ovs-flow-rules.sh         # OpenFlow rules
 │       ├── btrfs-snapshot.sh         # Snapshot service
 │       └── btrfs-vector-sync.sh      # Qdrant sync
 │
@@ -124,17 +123,15 @@ nix/ghostbridge/
 ## Module Documentation
 
 ### modules/ghostbridge-ovs.nix
-**Purpose**: Open vSwitch network configuration  
+**Purpose**: Open vSwitch network configuration
 **Manages**:
 - OVS bridge creation (ovsbr0, ovsbr1)
 - systemd-networkd configuration
 - Hardware offload disabling (CRITICAL)
-- OpenFlow rule application
 - Network diagnostics
 
 **Services created**:
 - `ovs-bridge-setup.service` - Creates OVS bridges
-- `ovs-flow-rules.service` - Applies OpenFlow rules
 
 **Files created**:
 - `/etc/ghostbridge/ovs-status.sh` - Diagnostic script
