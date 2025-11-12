@@ -38,9 +38,6 @@
     timeout = 5;
   };
 
-    efi.canTouchEfiVariables = true;
-  };
-
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "intel_iommu=on"
