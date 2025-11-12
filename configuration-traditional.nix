@@ -109,9 +109,6 @@
     tcpdump
     wireshark-cli
     
-    busctl
-    d-spy
-    dfeet
     
     qemu_kvm
     libvirt
