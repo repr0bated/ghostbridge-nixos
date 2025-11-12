@@ -12,6 +12,30 @@
   ];
 
 
+
+  systemd.services."disable-nic-offload" = {
+    description = "Disable NIC hardware offload (CRITICAL for Hetzner)";
+    after = [ "network-pre.target" ];
+    before = [ "network.target" "systemd-networkd.service" ];
+    wantedBy = [ "multi-user.target" ];
+    
+    path = with pkgs; [ ethtool ];
+    
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    
+    script = ''
+      echo "Disabling hardware offload on ens1 (prevents Hetzner DPU issues)..."
+      ethtool -K ens1 gso off || true
+      ethtool -K ens1 tso off || true
+      ethtool -K ens1 gro off || true
+      ethtool -K ens1 lro off || true
+      echo "Hardware offload disabled successfully"
+    '';
+  };
+
   systemd.network = {
     enable = true;
     wait-online.anyInterface = true;
@@ -20,10 +44,6 @@
       matchConfig.Name = "ens1";
       linkConfig = {
         RequiredForOnline = "no";
-        GenericSegmentationOffload = false;
-        TCPSegmentationOffload = false;
-        GenericReceiveOffload = false;
-        LargeReceiveOffload = false;
       };
       networkConfig = {
         DHCP = "no";

@@ -80,7 +80,7 @@
   users.users.jeremy = {
     isNormalUser = true;
     description = "Jeremy";
-    extraGroups = [ "wheel" "docker" "libvirtd" "kvm" "lxd" "networkmanager" ];
+    extraGroups = [ "wheel" "docker" "libvirtd" "kvm" "lxd-lts" "networkmanager" ];
     shell = pkgs.bash;
     openssh.authorizedKeys.keys = [
     ];
@@ -114,7 +114,7 @@
     libvirt
     virt-manager
     lxc
-    lxd
+    lxd-lts
     
     rustup
     gcc
