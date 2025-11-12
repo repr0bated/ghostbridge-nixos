@@ -69,7 +69,8 @@
       networkConfig = {
         DHCP = "no";
         IPv6AcceptRA = false;
-        IPForward = true;
+        IPv4Forwarding = true;
+        IPv6Forwarding = false;
       };
       linkConfig.RequiredForOnline = "no";
     };

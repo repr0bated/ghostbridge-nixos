@@ -1,7 +1,28 @@
 { config, pkgs, lib, ... }:
 
 {
-  services.dbus.enable = true;
+  services.dbus = {
+    enable = true;
+    packages = [
+      (pkgs.writeTextDir "etc/dbus-1/system.d/org.freedesktop.opdbus.conf" ''
+        <!DOCTYPE busconfig PUBLIC
+         "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+         "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+        <busconfig>
+          <policy user="root">
+            <allow own="org.freedesktop.opdbus"/>
+            <allow send_destination="org.freedesktop.opdbus"/>
+            <allow receive_sender="org.freedesktop.opdbus"/>
+          </policy>
+          
+          <policy context="default">
+            <allow send_destination="org.freedesktop.opdbus"/>
+            <allow receive_sender="org.freedesktop.opdbus"/>
+          </policy>
+        </busconfig>
+      '')
+    ];
+  };
 
   environment.systemPackages = with pkgs; [
     dbus
@@ -64,26 +85,6 @@
       WorkingDirectory = "/var/lib/op-dbus";
       User = "root";
     };
-  };
-
-  environment.etc."dbus-1/system.d/org.freedesktop.opdbus.conf" = {
-    text = ''
-      <!DOCTYPE busconfig PUBLIC
-       "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
-       "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
-      <busconfig>
-        <policy user="root">
-          <allow own="org.freedesktop.opdbus"/>
-          <allow send_destination="org.freedesktop.opdbus"/>
-          <allow receive_sender="org.freedesktop.opdbus"/>
-        </policy>
-        
-        <policy context="default">
-          <allow send_destination="org.freedesktop.opdbus"/>
-          <allow receive_sender="org.freedesktop.opdbus"/>
-        </policy>
-      </busconfig>
-    '';
   };
 
   environment.etc."op-dbus/state.json" = {
