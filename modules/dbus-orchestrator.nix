@@ -4,8 +4,6 @@
   services.dbus.enable = true;
 
   environment.systemPackages = with pkgs; [
-    d-spy
-    dfeet
     dbus
   ];
 
