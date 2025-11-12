@@ -179,14 +179,12 @@ sudo /etc/ghostbridge/ovs-status.sh
 # Expected output:
 # - ovsbr0 with ens1 attached and ovsbr0-if with DHCP address
 # - ovsbr1 with ovsbr1-if at 10.0.1.1/24
-# - OpenFlow rules showing anti-broadcast filters
 
 # Check BTRFS subvolumes
 sudo btrfs subvolume list /
 
 # Check services
 sudo systemctl status ovs-bridge-setup.service
-sudo systemctl status ovs-flow-rules.service
 sudo systemctl status btrfs-snapshot.service
 sudo systemctl status qdrant.service
 ```
@@ -342,11 +340,10 @@ sudo journalctl -u btrfs-vector-sync -f
 # 1. openvswitch.service
 # 2. ovs-bridge-setup.service
 # 3. systemd-networkd.service
-# 4. ovs-flow-rules.service
-# 5. op-dbus.service
-# 6. btrfs-snapshot.service
-# 7. qdrant.service
-# 8. btrfs-vector-sync.service
+# 4. op-dbus.service
+# 5. btrfs-snapshot.service
+# 6. qdrant.service
+# 7. btrfs-vector-sync.service
 
 # Check which failed first
 sudo systemctl list-units --failed

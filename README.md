@@ -11,7 +11,6 @@ Production-ready NixOS configuration for the GhostBridge infrastructure system, 
 ### Network (OVS Bridges)
 - **ovsbr0**: Internet-facing bridge connected to physical NIC (ens1)
 - **ovsbr1**: Internal network bridge (10.0.1.0/24)
-- OpenFlow rules to prevent malformed packets (critical for Hetzner hosting)
 - Hardware offload disabled to prevent DPU packet issues
 
 ### Storage (BTRFS)
@@ -49,7 +48,6 @@ nix/ghostbridge/
 │   ├── dbus-orchestrator.nix         # D-Bus services
 │   ├── virtualization.nix            # KVM/LXC/Docker
 │   └── scripts/
-│       ├── ovs-flow-rules.sh         # OpenFlow rules
 │       ├── btrfs-snapshot.sh         # Snapshot orchestrator
 │       └── btrfs-vector-sync.sh      # Qdrant sync
 ├── README.md                          # This file
@@ -195,7 +193,6 @@ sudo systemctl status ovs-bridge-setup.service
 
 # Manually recreate bridges
 sudo systemctl restart ovs-bridge-setup.service
-sudo systemctl restart ovs-flow-rules.service
 ```
 
 ### BTRFS Snapshots Not Working

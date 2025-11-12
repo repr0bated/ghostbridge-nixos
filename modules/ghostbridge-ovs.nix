@@ -129,21 +129,6 @@
     '';
   };
 
-  systemd.services."ovs-flow-rules" = {
-    description = "Apply OpenFlow rules to OVS bridges";
-    after = [ "ovs-bridge-setup.service" "systemd-networkd.service" ];
-    wants = [ "ovs-bridge-setup.service" ];
-    wantedBy = [ "multi-user.target" ];
-    requires = [ "vswitchd.service" ];
-    
-    path = with pkgs; [ openvswitch ];
-    
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.bash}/bin/bash ${./scripts/ovs-flow-rules.sh}";
-    };
-  };
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
@@ -163,12 +148,6 @@
       echo ""
       echo "=== Network Interfaces ==="
       ip -br addr
-      echo ""
-      echo "=== OpenFlow Rules (ovsbr0) ==="
-      ovs-ofctl dump-flows ovsbr0
-      echo ""
-      echo "=== OpenFlow Rules (ovsbr1) ==="
-      ovs-ofctl dump-flows ovsbr1
     '';
     mode = "0755";
   };

@@ -39,7 +39,6 @@ A **production-ready, complete NixOS configuration** for the GhostBridge infrast
    - Open vSwitch bridge setup (ovsbr0, ovsbr1)
    - systemd-networkd configuration for all interfaces
    - **CRITICAL**: Hardware offload disabled (prevents Hetzner shutdowns)
-   - OpenFlow rules service
    - Kernel sysctl for IP forwarding
    - OVS status diagnostic script
 
@@ -67,15 +66,9 @@ A **production-ready, complete NixOS configuration** for the GhostBridge infrast
    - NoVNC web console on port 6080
    - VM GPU passthrough support
 
-### Scripts (3 files in modules/scripts/)
+### Scripts (2 files in modules/scripts/)
 
-8. **modules/scripts/ovs-flow-rules.sh** - OpenFlow rules (26 lines)
-   - Drops broadcast packets (ff:ff:ff:ff:ff:ff)
-   - Drops multicast packets (01:00:00:00:00:00/01:00:00:00:00:00)
-   - Normal forwarding for everything else
-   - **CRITICAL**: Prevents malformed DPU packets that trigger Hetzner shutdowns
-
-9. **modules/scripts/btrfs-snapshot.sh** - Snapshot orchestrator (60 lines)
+8. **modules/scripts/btrfs-snapshot.sh** - Snapshot orchestrator (60 lines)
    - Creates read-only BTRFS snapshots every 1 second
    - Calculates SHA-256 blockchain hash
    - Links to previous snapshot (blockchain)
@@ -123,12 +116,11 @@ A **production-ready, complete NixOS configuration** for the GhostBridge infrast
 ## Key Features Implemented
 
 ### Network (OVS Bridges)
-✅ ovsbr0 (internet-facing) with physical NIC attachment  
-✅ ovsbr1 (internal network) with static IP  
-✅ Hardware offload disabled (prevents malformed packets)  
-✅ OpenFlow rules to drop broadcasts/multicasts  
-✅ systemd-networkd (not NetworkManager)  
-✅ Proper service ordering (OVS → networkd → flows)  
+✅ ovsbr0 (internet-facing) with physical NIC attachment
+✅ ovsbr1 (internal network) with static IP
+✅ Hardware offload disabled (prevents malformed packets)
+✅ systemd-networkd (not NetworkManager)
+✅ Proper service ordering (OVS → networkd)  
 
 ### Storage (BTRFS)
 ✅ 6 subvolumes with optimized mount options  

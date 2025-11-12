@@ -85,10 +85,6 @@ Use this checklist to ensure successful deployment of the GhostBridge infrastruc
   - [ ] Can ping external hosts (8.8.8.8)
   - [ ] Can resolve DNS (nslookup google.com)
 
-- [ ] OpenFlow rules applied
-  - [ ] `ovs-ofctl dump-flows ovsbr0` shows anti-broadcast rules
-  - [ ] `ovs-ofctl dump-flows ovsbr1` shows anti-broadcast rules
-
 ### Storage
 
 - [ ] All subvolumes mounted
