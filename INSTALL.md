@@ -339,7 +339,8 @@ sudo journalctl -u btrfs-vector-sync -f
 
 ```bash
 # Services have strict ordering:
-# 1. openvswitch.service
+# 0. disable-nic-offload.service (CRITICAL for Hetzner - runs first!)
+# 1. vswitchd.service (OpenVSwitch daemon)
 # 2. ovs-bridge-setup.service
 # 3. systemd-networkd.service
 # 4. ovs-flow-rules.service
