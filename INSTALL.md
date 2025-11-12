@@ -364,3 +364,27 @@ sudo journalctl -xe
 ## Support
 
 See main repository README for support channels.
+
+## Bootloader Configuration
+
+The system uses **systemd-boot** with the following features enabled:
+
+### Features
+- **EFI Support**: Full UEFI boot with EFI variables management
+- **netboot.xyz**: Network boot capabilities for rescue and installation
+- **memtest86**: Memory diagnostics tool in boot menu
+- **Security**: Boot editor disabled to prevent unauthorized modifications
+- **Auto-cleanup**: Only keeps last 10 configurations to prevent /boot partition fill
+
+### Boot Options
+When the system boots, you'll see:
+1. NixOS configurations (current + 9 previous generations)
+2. netboot.xyz entry - for network booting and rescue operations
+3. memtest86 entry - for RAM testing
+
+### Boot Timeout
+The bootloader waits **5 seconds** before auto-booting the default entry.
+
+### EFI Mount Point
+The EFI system partition is mounted at `/boot` with the label `BOOT`.
+
