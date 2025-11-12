@@ -4,7 +4,6 @@
   services.dbus.enable = true;
 
   environment.systemPackages = with pkgs; [
-    busctl
     d-spy
     dfeet
     dbus
@@ -118,7 +117,6 @@
     text = ''
       #!/usr/bin/env bash
       echo "=== D-Bus System Services ==="
-      busctl list | grep -E "(network|opdbus)"
       
       echo ""
       echo "=== op-dbus Service Status ==="
@@ -126,7 +124,6 @@
       
       echo ""
       echo "=== D-Bus Introspection ==="
-      busctl introspect org.freedesktop.network1 /org/freedesktop/network1 || true
     '';
     mode = "0755";
   };

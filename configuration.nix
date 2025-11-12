@@ -178,7 +178,7 @@
 
   hardware.cpu.intel.updateMicrocode = true;
   hardware.enableAllFirmware = true;
-  hardware.opengl.enable = true;
+  hardware.graphics.enable = true;
 
   nixpkgs.overlays = [
     (final: prev: {
