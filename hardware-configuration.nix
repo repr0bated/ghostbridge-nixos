@@ -9,7 +9,7 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/3d7a677c-0990-46f6-b322-a3505a1d41d7";
     fsType = "btrfs";
     options = [ 
       "subvol=@"
@@ -22,7 +22,7 @@
   };
 
   fileSystems."/home" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/3d7a677c-0990-46f6-b322-a3505a1d41d7";
     fsType = "btrfs";
     options = [ 
       "subvol=@home"
@@ -35,7 +35,7 @@
   };
 
   fileSystems."/overlay" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/3d7a677c-0990-46f6-b322-a3505a1d41d7";
     fsType = "btrfs";
     options = [ 
       "subvol=@overlay"
@@ -47,7 +47,7 @@
   };
 
   fileSystems."/var/lib/blockchain-timing" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/3d7a677c-0990-46f6-b322-a3505a1d41d7";
     fsType = "btrfs";
     options = [ 
       "subvol=@blockchain-timing"
@@ -58,7 +58,7 @@
   };
 
   fileSystems."/var/lib/blockchain-vectors" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/3d7a677c-0990-46f6-b322-a3505a1d41d7";
     fsType = "btrfs";
     options = [ 
       "subvol=@blockchain-vectors"
@@ -69,7 +69,7 @@
   };
 
   fileSystems."/work" = {
-    device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/3d7a677c-0990-46f6-b322-a3505a1d41d7";
     fsType = "btrfs";
     options = [ 
       "subvol=@work"
@@ -81,7 +81,7 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-label/BOOT";
+    device = "/dev/disk/by-uuid/EBBB-271B";
     fsType = "vfat";
   };
 

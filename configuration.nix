@@ -66,9 +66,13 @@
     description = "Jeremy";
     extraGroups = [ "wheel" "docker" "libvirtd" "kvm" "lxd-lts" "networkmanager" ];
     shell = pkgs.bash;
+    initialHashedPassword = "$6$2WpW4Hcgv2FL0FYi$Q2Yj6jicSmpp3Em4OaKOegDLiXc6sUdwgdVQyMq3dRaBi/uDbjQBqDta4VWYRtDCi53Kbkh3sY0sY1iYQYGls0";
     openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKqUqS3MZfw/CGGU2hYz/LzS+umOgLahNtxPQe7AVShK root@vps-privacy-router"
     ];
   };
+
+  users.users.root.initialHashedPassword = "$6$YTrODDcTakPHfb4a$ocaGONhjAMXiRwRysu5aaPxPbDwhA24NTO7satPkLZoLbVdNENhGcGHz8NVp3ucw8QVMJaPLtVbYZJFrNK.771";
 
   security.sudo.wheelNeedsPassword = false;
 
@@ -111,6 +115,7 @@
     prometheus-node-exporter
     
     python3
+    claude-code
     
     gptfdisk
     parted
@@ -176,11 +181,11 @@
   hardware.cpu.intel.updateMicrocode = true;
   hardware.enableAllFirmware = true;
   hardware.graphics.enable = true;
-
   nixpkgs.overlays = [
     (final: prev: {
       unstable = import (builtins.fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+        sha256 = "04h7cq8rp8815xb4zglkah4w6p2r5lqp7xanv89yxzbmnv29np2a";
       }) {
         system = final.system;
         config.allowUnfree = true;
@@ -190,5 +195,5 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 }

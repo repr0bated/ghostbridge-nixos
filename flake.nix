@@ -2,11 +2,21 @@
   description = "GhostBridge Infrastructure System - Complete NixOS Configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    claude-code.url = "github:repr0bated/claude-code-nix";
+    claude-code.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable }: {
+  outputs = { self, nixpkgs, nixpkgs-unstable, claude-code }:
+  let
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in {
+    packages.${system} = {
+      openflow-dbus = pkgs.callPackage ./rust-modules/openflow { };
+    };
+
     nixosConfigurations.ghostbridge = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
@@ -23,6 +33,10 @@
                 system = "x86_64-linux";
                 config.allowUnfree = true;
               };
+            })
+            claude-code.overlays.default
+            (final: prev: {
+              openflow-dbus = self.packages.${system}.openflow-dbus;
             })
           ];
         })

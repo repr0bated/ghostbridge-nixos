@@ -13,6 +13,7 @@
     (final: prev: {
       unstable = import (builtins.fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+        sha256 = "04h7cq8rp8815xb4zglkah4w6p2r5lqp7xanv89yxzbmnv29np2a";
       }) {
         system = final.system;
         config.allowUnfree = true;
@@ -124,6 +125,7 @@
     prometheus-node-exporter
     
     python3
+    claude-code
     
     gptfdisk
     parted
@@ -189,6 +191,5 @@
   hardware.cpu.intel.updateMicrocode = true;
   hardware.enableAllFirmware = true;
   hardware.graphics.enable = true;
-
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 }
